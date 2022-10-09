@@ -1,5 +1,11 @@
 # Django
 
+## Activate The ENV
+`.\env\Scripts\activate`
+
+## Deactivate The ENV
+`deactivate`
+
 ## Run Server
 
 `python manage.py runserver`
@@ -11,5 +17,5 @@
 
 
 ## Admin
-
+- URL Admin panel `http://127.0.0.1:8000/admin/`
 - Make admin `python manage.py createsuperuser`
