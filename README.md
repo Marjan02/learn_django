@@ -1,21 +1,55 @@
 # Django
 
-## Activate The ENV
-`.\env\Scripts\activate`
+### Clone this repo and cd to it
 
-## Deactivate The ENV
-`deactivate`
+### Create a virtual environment :
 
-## Run Server
+```bash
+# Let's install virtualenv first
+pip install virtualenv
 
-`python manage.py runserver`
+# Then we create our virtual environment
+virtualenv envname
+```
 
-## Migration
+### Activate the virtual environment
 
-- First time `python manage.py migrate`
-- Make migrate `python manage.py makemigrations` && `python manage.py migrate`
+```bash
+envname\scripts\activate
+```
 
+### Deactivate the virtual environment
 
-## Admin
+```bash
+deactivate
+```
+
+### Install the requirements
+
+```bash
+pip install -r requirements.txt
+```
+
+### Run Server
+
+```bash
+python manage.py runserver
+```
+
+### Migration
+
+```bash
+# migrate
+python manage.py migrate
+
+# Make migrate
+python manage.py makemigrations
+```
+
+### Admin
+
 - URL Admin panel `http://127.0.0.1:8000/admin/`
-- Make admin `python manage.py createsuperuser`
+- Make admin
+  ```bash
+  python manage.py createsuperuser
+  ```
