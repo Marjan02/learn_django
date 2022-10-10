@@ -37,7 +37,7 @@ python manage.py runserver
 ```
 
 ### Database
-change in `/FirstApp/.env`
+change in `./FirstApp/.env`
 
 ### Migration
 
