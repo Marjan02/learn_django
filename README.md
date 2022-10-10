@@ -1,6 +1,6 @@
 # Django
 
-### Clone this repo and cd to it
+## Clone this repo and cd to it
 
 ### Create a virtual environment :
 
@@ -35,6 +35,9 @@ pip install -r requirements.txt
 ```bash
 python manage.py runserver
 ```
+
+### Database
+change in `/FirstApp/.env`
 
 ### Migration
 
