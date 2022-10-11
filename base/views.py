@@ -1,16 +1,11 @@
-from cgitb import html
-from multiprocessing import context
-from pydoc_data.topics import topics
-from django.contrib import messages
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.db.models import Q
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponse
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
-from .models import Room, Topic, Message  # import class from models
-from .forms import RoomForm, MessageForm, UserForm
+from django.db.models import Q
+from django.contrib.auth import authenticate, login, logout
+from .models import Room, Topic, Message, User  # import class from models
+from .forms import RoomForm, MessageForm, UserForm, MyUserCreationForm
 
 # Create your views here.
 
@@ -24,27 +19,50 @@ from .forms import RoomForm, MessageForm, UserForm
 def loginPage(request):
     page = 'login'
     if request.user.is_authenticated:
-        return redirect(to='home')
+        return redirect('home')
 
     if request.method == 'POST':
-        username = request.POST.get('username').lower()
+        email = request.POST.get('email').lower()
         password = request.POST.get('password')
 
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(email=email)
         except:
             messages.error(request, 'User does not exist')
 
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, email=email, password=password)
 
         if user is not None:
             login(request, user)
             return redirect('home')
         else:
-            messages.error(request, 'password is wrong')
+            messages.error(request, 'Username OR password does not exit')
 
     context = {'page': page}
     return render(request, 'base/login_register.html', context)
+    # page = 'login'
+    # if request.user.is_authenticated:
+    #     return redirect(to='home')
+
+    # if request.method == 'POST':
+    #     username = request.POST.get('username').lower()
+    #     password = request.POST.get('password')
+
+    #     try:
+    #         user = User.objects.get(username=username)
+    #     except:
+    #         messages.error(request, 'User does not exist')
+
+    #     user = authenticate(request, username=username, password=password)
+
+    #     if user is not None:
+    #         login(request, user)
+    #         return redirect('home')
+    #     else:
+    #         messages.error(request, 'password is wrong')
+
+    # context = {'page': page}
+    # return render(request, 'base/login_register.html', context)
 
 
 def logoutUser(request):
@@ -53,12 +71,10 @@ def logoutUser(request):
 
 
 def registerPage(request):
-    form = UserCreationForm()
-    if request.user.is_authenticated:
-        return redirect(to='home')
+    form = MyUserCreationForm()
 
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = MyUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
             user.username = user.username.lower()
@@ -66,7 +82,7 @@ def registerPage(request):
             login(request, user)
             return redirect('home')
         else:
-            messages.error(request, 'An error occured during registration')
+            messages.error(request, 'An error occurred during registration')
 
     context = {'form': form}
     return render(request, 'base/login_register.html', context)
@@ -222,10 +238,22 @@ def updateUser(request):
     form = UserForm(instance=user)
 
     if request.method == 'POST':
-        form = UserForm(request.POST, instance=user)
+        form = UserForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
             return redirect('user-profile', pk=user.id)
 
-    context = {'form': form}
-    return render(request, 'base/update-user.html', context)
+    return render(request, 'base/update-user.html', {'form': form})
+
+
+def topicsPage(request):
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
+    topics = Topic.objects.filter(name__icontains=q)
+    context = {'topics': topics}
+    return render(request, 'base/topics.html', context)
+
+
+def activityPage(request):
+    room_messages = Message.objects.all()
+    context = {'room_messages': room_messages}
+    return render(request, 'base/activity.html', context)
