@@ -34,6 +34,8 @@ def loginPage(request):
 
         if user is not None:
             login(request, user)
+            # print("the email is " + email) # apa coba
+            # print("the password is " + password)
             return redirect('home')
         else:
             messages.error(request, 'Username OR password does not exit')
